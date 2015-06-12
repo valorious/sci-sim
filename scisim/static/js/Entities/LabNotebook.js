@@ -5,6 +5,7 @@ var LabNotebook = function($selector){
 	this.init();
 };
 
+
 LabNotebook.prototype = Object.create(ListContainer.prototype);
 
 LabNotebook.prototype.init = function(){
@@ -34,3 +35,7 @@ LabNotebook.prototype.addNoteField = function(e){
 LabNotebook.prototype.removeInput = function(){
 	this.$list.find('input').parent().remove();
 };
+
+LabNotebook.prototype.addButtonToLast = function(chainNum) {
+    this.$list.children().last().append("<button class='btn btn-default' onclick='chain.revivePage("+ chainNum +")'>Change my choice</button>");
+}

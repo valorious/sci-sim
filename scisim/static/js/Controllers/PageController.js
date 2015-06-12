@@ -90,10 +90,17 @@ PageController.prototype.composePage = function(pageResponse) {
 	 if(this.hasTextInput) html += tf.fillTemplate({"text": "Submit and continue", "id": "submit-btn"}, "btn");
 	 if(this.goes_to_page && !this.hasTextInput && choices.length === 0) html += tf.fillTemplate({"text": "Continue", "id": "continue-btn"}, "btn");
 	 
+    
 	 ps.transitionPage(html);
 	 this.$html = $(html);
 	 chain.add(this);
+    
+    
+    if(this.hasBinary && pageResponse.page_modifiers.length == 0) {
+        labnotebook.addButtonToLast(chain.count() - 1);
+    }
 };
+
 
 
 PageController.prototype.applyDirectives = function(pageResponse) {
@@ -169,21 +176,22 @@ PageController.prototype.processBinaryClick = function(e) {
 	
 	var value = $elem.text(),
 		choiceId = $elem.data('choice-id'),
-		destinationId = $elem.data('destination'),
+		destinationId = chain.isThisLastPage(this, $elem.data('destination')),
 		action_string = getActionString(value, choiceId, this.page_id),
 		user_ids = JSON.parse(localStorage.getItem("user_id"));
 		
 		var loggableString = "";
 		
-		if(chain.getLastPage().patient){
-			loggableString += chain.getLastPage().patient+ ": ";	
+		if(chain.getActivePage().patient){
+			loggableString += chain.getActivePage().patient+ ": ";
 		}else{
 			loggableString += "Question: " + $('.page-section').last().text() + " You said: ";
+            
 		}
 		
 		loggableString += value;
 		labnotebook.add(loggableString.replace("}", ""));
-		
+    
 		var choices_made = JSON.parse(localStorage.getItem("choices_made"));
 		choices_made.push(choiceId);
 		localStorage.setItem("choices_made", JSON.stringify(choices_made));
@@ -196,7 +204,6 @@ PageController.prototype.processBinaryClick = function(e) {
 	for (var i = 0; i < user_ids.length; i++) {
 		requests.push([this.page_id, user_ids[i], action_string]);
 	};
-
 	if(requests.length > 1){
 		this.logActions(requests, destinationId);
 	}else{
@@ -204,7 +211,7 @@ PageController.prototype.processBinaryClick = function(e) {
 		api.logUserAction.apply(null, requests[0]).then(function (response) {
 			  if(!response.hasOwnProperty("error")){
 			  		localStorage.setItem('last_page_id', that.page_id);
-					publisher.publish('changePage', [PageController, destinationId]);
+                    publisher.publish('changePage', [PageController, destinationId]);
 			  }
 		});
 	}
@@ -276,9 +283,8 @@ PageController.prototype.logActions = function(data, destination) {
 
 		loader.hide();
 		if(destination){
-			localStorage.setItem('last_page_id', that.page_id);
-			
-			publisher.publish('changePage', [PageController, destination]); // assume that that's all we need to do on the page	
+            localStorage.setItem('last_page_id', that.page_id);
+            publisher.publish('changePage', [PageController, destination]); // assume that that's all we need to do on the page
 		}
 	});
 };
@@ -291,11 +297,12 @@ PageController.prototype.disableChoices = function() {
 };
 
 PageController.prototype.sleep = function(){
-	$('.screen').fadeOut().remove();
+	$('.screen').empty().hide();
 };
 
 PageController.prototype.revive = function(){
-	this.$html.appendTo(".page-container").hide().fadeIn();
+    this.$html.appendTo(".screen");
+    $('.screen').fadeIn();
 	this.init();
 	this.visits += 1;
 	this.checkVisits();
