@@ -37,5 +37,5 @@ LabNotebook.prototype.removeInput = function(){
 };
 
 LabNotebook.prototype.addButtonToLast = function(chainNum) {
-    this.$list.children().last().append("<button class='btn btn-default' onclick='chain.revivePage("+ chainNum +")'>Change my choice</button>");
+    this.$list.children().last().append("<button class='btn btn-default' onclick='chain.revivePageWithoutCurrent("+ chainNum +")'>Change my choice</button>");
 }

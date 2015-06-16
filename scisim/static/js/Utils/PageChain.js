@@ -41,7 +41,7 @@ PageChain.prototype.revivePage = function(current, newPage){
 	this.chain[newPage].revive();
 };
 
-PageChain.prototype.revivePage = function(newPage){
+PageChain.prototype.revivePageWithoutCurrent = function(newPage){
     this.getLastPage().sleep();
     this.chain[newPage].revive();
     this.activePointer = newPage;

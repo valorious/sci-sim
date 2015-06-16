@@ -1,7 +1,7 @@
 var PageController = function(page_id){
-	if(localStorage.getItem(page_id)){
+    if(localStorage.getItem(page_id) && chain.activePointer == chain.currentPointer){
 			localStorage.setItem(page_id, parseInt(localStorage.getItem(page_id)) + 1);
-	}else{
+	}else if (chain.activePointer == chain.currentPointer) {
 		localStorage.setItem(page_id, 1);
 	}
 	
@@ -304,7 +304,6 @@ PageController.prototype.revive = function(){
     this.$html.appendTo(".screen");
     $('.screen').fadeIn();
 	this.init();
-	this.visits += 1;
 	this.checkVisits();
 };
 
