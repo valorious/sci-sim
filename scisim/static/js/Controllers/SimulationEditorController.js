@@ -24,9 +24,5 @@ SimulationEditorController.prototype.handleEvent = function(e) {
  * Called by Engine to start this controller
  */
 SimulationEditorController.prototype.run = function() {
-    this.renderer.render(
-        {
-            "initial": true,
-        }
-    );
+    this.renderer.render();
 };

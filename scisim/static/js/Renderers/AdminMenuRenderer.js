@@ -1,7 +1,14 @@
-var AdminMenuRenderer = function(controller) {
-    // Maybe should make these global imports like in the scisim app
+/**
+ * Renderer takes care of rendering views. Its render method should be called
+ * by its Controller. After receiving events
+ * @param {[type]} controller [description]
+ * @param {[type]} menu       [description]
+ */
+var AdminMenuRenderer = function(controller, menu) {
     this.controller = controller;
+    this.menu = menu;
     this.drawn = false;
+    this.views = [new AdminMenuView(menu)];
 };
 
 /**
@@ -11,15 +18,8 @@ var AdminMenuRenderer = function(controller) {
  * @param  {object} options [hash of options key-valule pairs]
  */
 AdminMenuRenderer.prototype.render = function(options) {
-    console.log(options);
     if (!this.drawn) {
-        var choices = options.choices;
-        var templateInfo;
-        var html = "";
-        choices.forEach(function(choice) {
-            templateInfo = {"title": choice.title, "desc": choice.description, "value": choice.value};
-            html += tf.fillTemplate(templateInfo, "admin_menu");
-        });
+        var html = this.views[0].template();
         ps.transitionPage(html);
         this.attachListeners();
         this.drawn = true;
@@ -43,13 +43,15 @@ AdminMenuRenderer.prototype.render = function(options) {
  * leave all logic to the controller
  */
 AdminMenuRenderer.prototype.handleClicked = function(e) {
-    // Some more rendering-specific handling can be done here if necessary but
-    // leave all logic to the controller
     var choice = $(e.currentTarget).find("input").val();
-    console.log("handleClicked passing " + value + " to controller");
+    console.log("handleClicked passing " + choice + " to controller");
     this.controller.handleEvent(choice);
 };
 
+/**
+ * Tear down procedures should be placed here. This method can be called by
+ * the controller when it is torn down by the engine.
+ */
 AdminMenuRenderer.prototype.teardown = function() {
     this.drawn = false;
 };
