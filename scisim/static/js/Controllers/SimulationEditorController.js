@@ -26,6 +26,69 @@ var SimulationEditorController = function(engine) {
  * @param  {Event} e [Event passed from renderer to controller]
  */
 SimulationEditorController.prototype.handleEvent = function(e) {
+
+    if (e.name === SimulationEditorModel.EVENTS.MENU_ITEM_CLICKED) {
+
+        if (this.simEditorModel.state !== SimulationEditorModel.STATE.MENU) {
+            console.log("Received <" + SimulationEditorModel.EVENTS.MENU_ITEM_CLICKED + "> when not in menu state.");
+            return;
+        }
+
+        var menu_idx = e.value;
+
+        if (menu_idx === this.simEditorModel.simulations.length) {
+            // Create New Sim button is clicked
+            console.log("Create New Sim");
+            this.simEditorModel.addSimulation(new SimulationModel());
+            this.simEditorModel.startEditing(menu_idx);
+            this.renderer.render();
+        }
+
+    } else if (e.name === SimulationEditorModel.EVENTS.EDITOR_ITEM_CLICKED) {
+
+        if (this.simEditorModel.state !== SimulationEditorModel.STATE.EDITING) {
+            console.log("Received <" + SimulationEditorModel.EVENTS.EDITOR_ITEM_CLICKED + "> when not in editor state.");
+            return;
+        }
+
+        // Assume
+        var widget_name = e.value;
+        var widget_options = e.options;
+
+        // For now, hardcoding out widget names, but in the future maybe they
+        // can be placed in their own object defs to store metadata/state
+        if (widget_name === "submit-simulation") {
+
+            // TODO: Confirmation that user wants to submit
+
+            // TODO: Map fields of page to Model
+
+            if (this.simEditorModel.hasAllRequiredFields()) {
+                // check to see if simulation is valid before saving
+                console.log("Saving " + this.simEditorModel.title);
+
+                // TODO: Maybe have a warpper function for persistence operations
+                // For now, we will just ship to API
+                ModelAPIBridge.sendSimulation(this.simEditorModel);
+
+                this.simEditorModel.finishEditing();
+
+                this.renderer.render();
+
+            } else {
+                // TODO: Handle pressing of simulation submit before ready
+                console.log("Simulation not ready for saving yet.");
+            }
+
+        } else if (widget_name === "submit-page") {
+
+            // TODO: Confirmation that user wants to submit
+
+            // TODO: Map fields of page to model
+
+        }
+
+    }
     if (this.simEditorModel.state === SimulationEditorModel.STATE.MENU) {
         // e will be an integer in this case
         // is there a way to abstract away this knowledge?
@@ -39,6 +102,11 @@ SimulationEditorController.prototype.handleEvent = function(e) {
         } else {
             // TODO: edit an existing simulation
         }
+
+    } else if (this.simEditorModel.state === SimulationEditorModel.STATE.EDITING) {
+
+
+
     }
 };
 

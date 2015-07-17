@@ -31,6 +31,56 @@ SimulationEditorModel.STATE = Object.freeze({
     EDITING: "Editing a simulation"
 });
 
+SimulationEditorModel.EVENTS = Object.freeze({
+    MENU_ITEM_CLICKED: "Menu item clicked",
+    EDITOR_ITEM_CLICKED: "Editor item clicked"
+});
+
+/**
+ * Enum containing creator functions for events.
+ *
+ * Actually probably shouldn't be an enum since we won't be using these enums
+ * as usual enums, but rather compare the names of the objects returned by them
+ * to the EVENTS enum
+ *
+ * @param {[type]} menu_item_idx)       {                                        return {                    name: SimulationEditorModel.EVENTS.MENU_ITEM_CLICKED,                                                                  value: menu_item_idx                };    } [description]
+ * @param {[type]} EDITOR_ITEM_CLICKED: function(editor_item_name, index) {                return {                                                                name: SimulationEditorModel.EVENTS.EDITOR_ITEM_CLICKED,                               value: {                                  widget_name: editor_item_name,                widget_idx: index            }        };    }} [description]
+ */
+SimulationEditorModel.EVENT_CREATOR = Object.freeze({
+    /**
+     * Takes in an index representing the index of the simulation clicked in the menu
+     *
+     * @param {Integer} menu_item_idx   represents the index of the simulation clicked on the menu
+     * @return {object} event object    containing name-value
+     */
+    MENU_ITEM_CLICKED: function(menu_item_idx) {
+        return {
+            name: SimulationEditorModel.EVENTS.MENU_ITEM_CLICKED,
+            value: menu_item_idx
+        };
+    },
+
+    /**
+     * Event that should be created when an editor item is clicked.
+     *
+     * The value for this event will be a context which the controller can use
+     * to determine which editor item got clicked and possibly have optional arguments
+     * However, it might not be smart to make the creator of this event have to know
+     * that options is an object that they need to create. However, for now we'll
+     * deal with it
+     *
+     * @param {String} editor_item_name name of editor item clicked
+     * @param {Object} options          object containing key-value pairs of optiosn
+     */
+    EDITOR_ITEM_CLICKED: function(editor_item_name, options) {
+        return {
+            name: SimulationEditorModel.EVENTS.EDITOR_ITEM_CLICKED,
+            value: editor_item_name,
+            options: options
+        };
+    }
+});
+
 /**
  * Adds a simulation to the current list of simulations.
  *
