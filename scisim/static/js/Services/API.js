@@ -1,9 +1,17 @@
-var API = function(){};
+	var API = function(){};
 
 API.prototype.getSimulations = function(func) {
 	return $.ajax({
 		url: '/api/simulations/all',
 		type:'GET'
+	});
+};
+
+API.prototype.getSimulationPages = function(sim_id) {
+	return $.ajax({
+		url: '/api/simulations/pages',
+		type: 'POST',
+		data: {"sim_id": sim_id}
 	});
 };
 
