@@ -8,18 +8,20 @@ var AdminMenuRenderer = function(controller, menu) {
     this.controller = controller;
     this.menu = menu;
     this.drawn = false;
-    this.views = [new AdminMenuView(menu)];
+    this.views = {
+        adminView: new AdminMenuView(menu)
+    };
 };
 
 /**
  * Generic render function that can be exposed to any controller. options
  * argument gives us flexibility but this process may need refactoring.
  *
- * @param  {object} options [hash of options key-valule pairs]
+ * @param  {Object} options hash of options key-valule pairs
  */
 AdminMenuRenderer.prototype.render = function(options) {
     if (!this.drawn) {
-        var html = this.views[0].template();
+        var html = this.views.adminView.template();
         ps.transitionPage(html);
         this.attachListeners();
         this.drawn = true;

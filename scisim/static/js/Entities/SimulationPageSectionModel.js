@@ -73,3 +73,11 @@ SimulationPageSectionModel.prototype.setContent = function(content, content_type
     // TODO: Add parsing code
 };
 
+/**
+ * Probably not the best way to set order, especially through editor. Would be
+ * better if we could do this through PageModel itself using its array of page sections
+ * @param {[type]} order [description]
+ */
+SimulationPageSectionModel.prototype.setOrder = function(order) {
+    this.order = order;
+};

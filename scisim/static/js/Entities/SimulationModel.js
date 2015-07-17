@@ -26,7 +26,7 @@ var SimulationModel = function(args) {
     this.show_library = args.show_library;
     this.library = args.library;
 
-    this.pages = args.pages;
+    this.pages = args.pages || [];
 };
 
 /**
@@ -56,3 +56,9 @@ SimulationModel.from_object = function(sim) {
 
     return sim;
 };
+
+SimulationModel.prototype.addPage = function(page) {
+    this.pages.push(page);
+};
+
+// TODO: Proper getters and setters if deemed necessary

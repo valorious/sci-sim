@@ -15,11 +15,11 @@ var SimulationPageModel = function(args) {
     this.title = args.title;
 
     // Keep this for now, but don't know what to do with it. Might remove.
-    this.links_incoming = args.links_incoming;
-    this.links_outgoing = args.links_outgoing;
+    this.links_incoming = args.links_incoming || [];
+    this.links_outgoing = args.links_outgoing || [];
 
     // Array of PageModfierModels
-    this.modifiers = args.modifiers;
+    this.modifiers = args.modifiers || [];
 
     // Key-Value map for easy access
     this.modifiers_kv = {};
@@ -28,7 +28,7 @@ var SimulationPageModel = function(args) {
     }.bind(this));
 
     // Array of PageActionModels
-    this.actions = args.actions;
+    this.actions = args.actions || [];
 
     // Key-Value map for easy access
     this.actions_kv = {};
@@ -37,7 +37,8 @@ var SimulationPageModel = function(args) {
     }.bind(this));
 
     // Array of PageSectionModels
-    this.sections = args.sections;
+    this.sections = args.sections || [];
+    this._orderSections();
 };
 
 /**
@@ -80,3 +81,33 @@ SimulationPageModel.from_object = function(page) {
     return new SimulationPageModel(page);
 };
 
+SimulationPageModel.prototype.addSection = function(section) {
+    this.sections.push(section);
+    this._orderSections();
+};
+
+SimulationPageModel.prototype.addModifier = function(modifier) {
+    this.modifiers.push(modifier);
+    this.modifiers_kv[modifier.name] = modifier.value;
+};
+
+SimulationPageModel.prototype.addAction = function(action) {
+    this.actions.push(action);
+    this.actions_kv[action.name] = action.value;
+};
+
+SimulationPageModel.prototype.setTitle = function(title) {
+    this.title = title;
+};
+
+/**
+ * Might be easier for now to just let editor change section order.
+ */
+SimulationPageModel.prototype.setSections = function(sections) {
+    this.sections = sections;
+};
+
+SimulationPageModel.prototype._orderSections = function() {
+    // Sorts by order of sections
+    this.sections.sort(function(a, b) {return a.order - b.order;});
+};
