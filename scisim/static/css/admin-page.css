@@ -51,3 +51,15 @@
     width: 100%;
     height: 
 }
+
+.dropdown-tag {
+    position: relative;
+}
+
+.dropdown {
+    position: relative;
+    top: 0px;
+    left: 10px;
+    border: 1px solid black;
+    margin-right: 10px;
+}
