@@ -7,10 +7,13 @@
  */
 var AdminMenuController = function(engine) {
     this.engine = engine;
-    this.renderer = new AdminMenuRenderer(this);
 
     // Gives us info about state of AdminMenu model
     this.adminMenu = new AdminMenu();
+
+    // Renderer takes in reference to controller and model
+    this.renderer = new AdminMenuRenderer(this, this.adminMenu);
+
     this.reportGenerator = new ReportGenerator();
 };
 
@@ -37,12 +40,7 @@ AdminMenuController.prototype.handleEvent = function(e) {
  */
 AdminMenuController.prototype.run = function() {
     console.log("hi");
-    this.renderer.render(
-        {
-            "initial": true,
-            "choices": this.adminMenu.choices
-        }
-    );
+    this.renderer.render();
 };
 
 /**
