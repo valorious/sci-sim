@@ -38,7 +38,7 @@ def api_users_create():
     db.session.add(logged_in)
 
     db.session.commit()
-        
+
     return respond_json(dumps(unpack_model(user)))
 
 @app.route('/api/users/login', methods=["POST"])
@@ -82,9 +82,9 @@ def api_users_last_session():
     user = User.query.filter(User.name == username).first()
     if not user:
         return error_message("User with username " + username + " was not found")
-        
+
     sim_id = Sim_User_Pivot.query.filter(Sim_User_Pivot.user_id == user.id).first()
-    
+
     return respond_json(dumps({"page": user.last_page, "sim_id": sim_id.sim_id}))
 
 @app.route('/api/users/notes', methods=['POST'])
@@ -176,18 +176,24 @@ def api_groups_add_user():
 
 @app.route('/api/simulations/create', methods=['POST'])
 def api_simulations_create():
-    error = check_for_params(['contents'], request)
+    error = check_for_params(['title', 'desc', 'password', 'preview_image_filename'], request)
     if error:
         return error_message(error)
 
-    sim = request.form['contents']
-    
-    errors = sim_parser.parse_sim(sim)
-    if errors:
-        return dumps({"errors":errors})
+    title, desc, password, preview_image_filename = request.form["title"], \
+                                                    request.form["desc"], \
+                                                    request.form["password"], \
+                                                    request.form["preview_image_filename"]
 
-    medias = sim_parser.get_all_media(sim)
-    return dumps({"medias":medias})
+    page_base = (db.engine.execute("select count() from simulations").fetchone()[0]) * 1000
+    # TODO: Check to see if Title is already in db
+    sim = Simulation(title=title, desc=desc, password=password,
+        preview_image_filename=preview_image_filename)
+
+    db.session.add(sim)
+    db.session.commit()
+
+    return success_message("Simulation successfully added to the database")
 
 @app.route('/api/simulations/all', methods=['GET'])
 def api_simulations_all():
@@ -243,6 +249,22 @@ def api_simulations_check_password():
         return success_message("passwords match")
     else:
         return error_message("password does not match")
+
+@app.route('/api/page/create', methods=['POST'])
+def api_page_create():
+    error = check_for_params(['title', 'simulation_id'])
+    if error:
+        return error_message(error)
+
+    title, sim_id = request.form['title'], request.form['simulation_id']
+
+    page_id = db.engine.execute('select max(id) from pages WHERE sim_id = %s', (sim_id)).fetchone()[0]
+
+    page = Page(sim=sim_id, title=title, id=page_id)
+    db.session.add(page)
+    db.session.commit()
+
+    return success_message("Created new page {}".format(title))
 
 # not sure how useful this would be
 @app.route('/api/page', methods=['POST'])

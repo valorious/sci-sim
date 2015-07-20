@@ -17,7 +17,7 @@ var AdminMenuView = function(menu) {
     /* ---
     * Scoping _.template here so that it will always use this scope
     --- */
-    this.template = _.template('\
+    this.template = _.template(' \
         <% _.each(this.menu.choices, function(choice) { %> \
             <div class="list-group-item clickable"> \
                 <div class="media"> \
@@ -34,4 +34,9 @@ var AdminMenuView = function(menu) {
             </div> \
         <% }); %> \
     ');
+
+    // Underscore templating with strings.
+    // This is a little ugly. If possible, we should look into a library like
+    // require.js which will allow us to import text files to use as templates
+    // This will allow us to re-use templates as well.
 };
