@@ -1,6 +1,6 @@
 //adds a new page to the simulation
 function addPage() {
-    var newPage = '<button onClick="promptRemove('+getPageNumToAdd()+')">Remove Page</button><div class="page-header"><h3 onClick="updateTitle(this)">'+getPageNumToAdd()+'</h3></div><table><tr><td><div class=\'header=\'>Page Title: </td><td><input type=\'text\' class=\'header\'></input></div></td></tr><tr><td><div class=\'heading-text\'>Page Subheading: </td><td><textarea class=\'heading-text\'></textarea></div></td></tr></table><div id="add-elem-'+getPageNumToAdd()+'"><span></span><button class="glyphicon glyphicon-font" onClick="addElement(\'text\','+getPageNumToAdd()+')">   Text</button><button class="glyphicon glyphicon-picture" onClick="addElement(\'image\','+getPageNumToAdd()+')">   Media</button><button class="glyphicon glyphicon-edit" onClick="addElement(\'input\','+getPageNumToAdd()+')">   Input</button><button class="glyphicon glyphicon-share" onClick="addElement(\'button\','+getPageNumToAdd()+')">   Button</button><button class="glyphicon glyphicon-share" onClick="addElement(\'link\', '+getPageNumToAdd()+')">   Link</button><span></span><div class=\'linked-page\'>Links to:<div><button class="dropdown-tag" onClick="createDropdownOfPages(this)">No page selected</button></div></div></div><div class="page-attrs"> Page Attributes: <p>This is a popup: <input type="checkbox" class="is-popup"></input></p><p>Minimum Choices: <input type="text" value="0"></input></p><p>Randomize Choices: <input type="checkbox" class="min-choices"></input></p></div>';
+    var newPage = '<button onClick="promptRemove('+getPageNumToAdd()+')">Remove Page</button><div class="page-header"><h3 onClick="updateTitle(this)">'+getPageNumToAdd()+'</h3></div><table><tr><td><div class=\'header=\'>Page Title: </td><td><input type=\'text\' class=\'header\'></input></div></td></tr></table><div id="add-elem-'+getPageNumToAdd()+'"><span></span><button class="glyphicon glyphicon-font" onClick="addElement(\'text\','+getPageNumToAdd()+')">   Text</button><button class="glyphicon glyphicon-picture" onClick="addElement(\'image\','+getPageNumToAdd()+')">   Media</button><button class="glyphicon glyphicon-edit" onClick="addElement(\'input\','+getPageNumToAdd()+')">   Input</button><button class="glyphicon glyphicon-share" onClick="addElement(\'button\','+getPageNumToAdd()+')">   Button</button><button class="glyphicon glyphicon-share" onClick="addElement(\'link\', '+getPageNumToAdd()+')">   Link</button><button class="glyphicon glyphicon-font" onClick="addElement(\'header\', '+getPageNumToAdd()+')">   Heading</button><span></span><div class=\'linked-page\'>Links to:<div><button class="dropdown-tag" onClick="createDropdownOfPages(this)">No page selected</button></div></div></div><div class="page-attrs"> Page Attributes: <p>This is a popup: <input type="checkbox" class="is-popup"></input></p><p>Minimum Choices: <input type="text" class="min-choices" value="0"></input></p><p>Randomize Choices: <input type="checkbox" class="random-choices"></input></p></div>';
     var pages = document.getElementById('pages');
     var newdiv = document.createElement('div');
     newdiv.setAttribute('id', 'page-num-'+ getPageNumToAdd());
@@ -43,6 +43,13 @@ function addElement(type, num) {
                             sectionToAdd += " link-content'><p>Link:</p>";
                             sectionToAdd += "<p>Text: <input type='text' class='link-text'></input></p>";
                             sectionToAdd += "<p>Link: <input type='text' class='link-hyper'></input></p>";
+                            sectionToAdd += "<div> <button onClick='removeSection(this)'>Remove Section</button></div>";
+                            break;
+            case "header" :
+                            sectionToAdd += " header-content'><textarea class='headertext'></textarea>";
+                            sectionToAdd += "<p>Header type: <select><option value='heading-big'>Large heading</option>";
+                            sectionToAdd += "<option value='heading-medium'>Medium heading</option>";
+                            sectionToAdd += "<option value='heading-small'>Small heading</option></select></p>";
                             sectionToAdd += "<div> <button onClick='removeSection(this)'>Remove Section</button></div>";
                             break;
         
